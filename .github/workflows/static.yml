@@ -1,43 +1,735 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFCF6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>沖繩春日海島之旅 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFCF6; --ink:#3E3A39;
+  --coral:#F2A497; --yellow:#F6D27A; --water:#A8D3E6; --green:#B9DAA5;
+  --line:3px solid var(--ink); --r:22px; --r-sm:14px;
+  --shadow:3px 3px 0 var(--ink);
+  --pad:12px; --navh:56px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:'Huninn',"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;font-size:16px;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+a{color:inherit}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
 
-on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
+/* NAV */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;background:var(--paper);border-bottom:var(--line);padding-top:env(safe-area-inset-top)}
+.nav-in{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:6px;height:var(--navh);padding:0 max(8px,env(safe-area-inset-right)) 0 max(8px,env(safe-area-inset-left))}
+.brand{display:flex;align-items:center;gap:6px;font-size:1.05rem;text-decoration:none;white-space:nowrap;flex-shrink:0}
+.brand svg{width:30px;height:30px}
+.brand span{display:none}
+.links{flex:1;min-width:0;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding:4px 0;-webkit-overflow-scrolling:touch;mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.links::-webkit-scrollbar{display:none}
+.links a{white-space:nowrap;text-decoration:none;padding:4px 10px;border:2.5px solid transparent;border-radius:999px;font-size:.9rem}
+.links a.on{border-color:var(--ink);background:var(--yellow)}
+.ctrl{display:flex;gap:5px;flex-shrink:0}
+.pill-btn{border:2.5px solid var(--ink);border-radius:999px;background:var(--paper);min-width:40px;height:34px;padding:0 9px;font-size:.88rem;white-space:nowrap}
+.pill-btn.lang{background:var(--water)}
+.pill-btn[aria-pressed="true"]{background:var(--green)}
+@media(min-width:720px){.brand span{display:inline}.links{mask-image:none}.links a:hover{border-color:var(--ink);background:var(--yellow)}}
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+/* LAYOUT */
+main{padding-top:calc(var(--navh) + 14px + env(safe-area-inset-top))}
+section{max-width:1000px;margin:0 auto 40px;padding:0 max(var(--pad),env(safe-area-inset-left));scroll-margin-top:calc(var(--navh) + 12px + env(safe-area-inset-top))}
+.sec-h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sec-h h2{font-size:1.4rem;font-weight:400;background:linear-gradient(transparent 62%,var(--yellow) 62%);padding:0 4px}
+.sec-h .em{width:40px;height:40px;border:var(--line);border-radius:50%;display:grid;place-items:center;font-size:1.2rem;background:var(--water);flex-shrink:0}
+.card{background:var(--paper);border:var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.muted{opacity:.72}
+.chip{display:inline-block;border:2.5px solid var(--ink);border-radius:999px;padding:0 9px;font-size:.84rem;background:var(--paper);margin:2px 2px 2px 0}
+.grid{display:grid;gap:14px}
+@media(min-width:720px){:root{--pad:16px;--r:24px;--shadow:4px 4px 0 var(--ink)}section{margin-bottom:56px}.grid.g3{grid-template-columns:repeat(3,1fr)}.grid.g2{grid-template-columns:1fr 1fr}}
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+/* HERO */
+.hero{padding:10px;overflow:hidden}
+.hero-svg{width:100%;height:auto;display:block;border:var(--line);border-radius:var(--r-sm)}
+.hero-txt{padding:4px 4px 2px}
+.hero h1{font-weight:400;font-size:clamp(1.6rem,7vw,2.6rem);line-height:1.25;margin:14px 0 2px}
+.hero .sub{font-size:1rem}
+.cd-wrap{display:grid;gap:10px;margin:14px 0 4px}
+.cd-box{border:var(--line);border-radius:var(--r-sm);padding:10px 8px}
+.cd-h{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cd-h b{font-weight:400;border:2.5px solid var(--ink);border-radius:999px;padding:0 10px}
+.cd-box.a .cd-h b{background:var(--coral)}.cd-box.b .cd-h b{background:var(--yellow)}
+.cd-names{font-size:.84rem;opacity:.8;margin-top:4px}
+.count{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:8px 0 4px}
+.count div{border:2.5px solid var(--ink);border-radius:12px;text-align:center;padding:5px 0}
+.count b{display:block;font-size:clamp(1.35rem,7vw,1.9rem);font-weight:400;line-height:1.1;font-variant-numeric:tabular-nums}
+.count small{font-size:.78rem}
+.count div:nth-child(1){background:var(--coral)}.count div:nth-child(2){background:var(--yellow)}
+.count div:nth-child(3){background:var(--water)}.count div:nth-child(4){background:var(--green)}
+.count-lbl{font-size:.88rem}
+@media(min-width:720px){.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:22px;align-items:center;padding:20px}.hero h1{margin-top:0}}
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+/* SVG animation */
+.anim{transform-box:fill-box;transform-origin:center}
+.float{animation:float 4s ease-in-out infinite}
+.bob{animation:bob 3s ease-in-out infinite}
+.drift{animation:drift 9s ease-in-out infinite alternate}
+.drift2{animation:drift 12s ease-in-out infinite alternate-reverse}
+.spin{animation:spin 24s linear infinite}
+.sway{animation:sway 3.5s ease-in-out infinite;transform-origin:left bottom}
+.swim{animation:swim 7s ease-in-out infinite alternate}
+.drive{animation:drive 8s linear infinite}
+.roll{animation:roll 1.2s ease-in-out infinite}
+@keyframes float{50%{transform:translate(8px,-6px)}}
+@keyframes bob{50%{transform:translateY(-4px) rotate(-2deg)}}
+@keyframes drift{to{transform:translateX(26px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes sway{50%{transform:rotate(-5deg)}}
+@keyframes swim{to{transform:translateX(40px)}}
+@keyframes drive{0%{transform:translateX(0)}100%{transform:translateX(-150px)}}
+@keyframes roll{50%{transform:translateY(-2px)}}
 
-jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload entire repository
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+/* FLIGHTS */
+.flight{overflow:hidden}
+.band{padding:8px 14px;border-bottom:var(--line);display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap}
+.flight.a .band{background:var(--coral)}.flight.b .band{background:var(--yellow)}.flight.r .band{background:var(--water)}
+.route{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 6px}
+.route .code{font-size:1.9rem;line-height:1}
+.route small{display:block;font-size:.8rem}
+.route .mid{flex:1;margin:0 10px;border-top:3px dashed var(--ink);position:relative;height:0}
+.route .mid svg{position:absolute;left:50%;top:-15px;width:30px;height:30px;transform:translateX(-50%)}
+.perf{border-top:3px dashed var(--ink);margin:8px 0 0}
+.f-body{padding:10px 14px 14px;font-size:.92rem}
+.f-body label,.lbl{display:block;font-size:.76rem;opacity:.7}
+
+/* CARS */
+.car{overflow:hidden}
+.car:nth-child(1) .band{background:var(--coral)}.car:nth-child(2) .band{background:var(--yellow)}.car:nth-child(3) .band{background:var(--green)}
+.car-body{display:flex;gap:12px;align-items:center;padding:12px 14px}
+.car-body svg{width:76px;height:52px;flex-shrink:0}
+.car-info{display:grid;gap:4px;font-size:.95rem;min-width:0}
+.car-name{font-size:1.15rem}
+.car-tip{margin-top:14px;padding:12px 14px;font-size:.92rem}
+.car-tip ul{padding-left:1.2em}
+
+/* ITINERARY */
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 12px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 calc(-1 * var(--pad));padding-left:var(--pad);padding-right:var(--pad)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;scroll-snap-align:center;border:var(--line);border-radius:16px;background:var(--paper);padding:6px 10px;text-align:center;min-width:70px;transition:transform .25s cubic-bezier(.3,1.6,.5,1),background .2s}
+.tab b{display:block;font-weight:400;font-size:1rem}
+.tab small{font-size:.76rem}
+.tab.on{background:var(--coral);transform:translateY(-4px);box-shadow:0 4px 0 var(--ink)}
+.tab .tm{display:block;font-size:.7rem;border-top:2px dashed var(--ink);margin-top:2px}
+.legend{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;font-size:.84rem;align-items:center}
+.day{padding:12px 10px}
+.day.pop{animation:pop .55s cubic-bezier(.3,1.5,.5,1)}
+@keyframes pop{0%{transform:translateY(14px) scale(.97);opacity:0}60%{transform:translateY(-5px) scale(1.01);opacity:1}100%{transform:none}}
+.day-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.day-head .ill{width:62px;height:62px;flex-shrink:0;border:var(--line);border-radius:16px;background:var(--paper);overflow:hidden}
+.day-head h3{font-weight:400;font-size:1.15rem;line-height:1.35}
+.day-meta{display:flex;flex-wrap:wrap;gap:2px;margin-top:4px}
+.chip.team-a{background:var(--coral)}.chip.all{background:var(--green)}.chip.stay{background:var(--water)}
+.opts{display:flex;border:var(--line);border-radius:999px;overflow:hidden;margin:2px 0 12px}
+.opts button{flex:1;border:0;background:var(--paper);padding:6px 8px;font-size:.92rem}
+.opts button+button{border-left:var(--line)}
+.opts button.on{background:var(--yellow)}
+.tl{list-style:none;position:relative;padding-left:24px}
+.tl::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;border-left:3px dashed var(--ink)}
+.tl-item{position:relative;margin-bottom:10px}
+.tl-item .dot{position:absolute;left:-24px;top:14px;width:18px;height:18px;border:var(--line);border-radius:50%;background:var(--paper)}
+.dot.car{background:var(--yellow)}.dot.plane{background:var(--coral)}.dot.boat,.dot.dive{background:var(--water)}.dot.walk{background:var(--green)}
+.dot.both{background:conic-gradient(var(--water) 0 50%,var(--coral) 0)}
+.tl-card{border:2.5px solid var(--ink);border-radius:var(--r-sm);padding:9px 11px;background:var(--paper)}
+.tl-card.must{background:#FFF4E6}
+.tl-top{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:.78rem}
+.slot{border:2px solid var(--ink);border-radius:8px;padding:0 6px}
+.badge-must{background:var(--coral);border:2px solid var(--ink);border-radius:999px;padding:0 8px}
+.badge-opt{border:2px dashed var(--ink);border-radius:999px;padding:0 8px}
+.tl-card h4{font-weight:400;font-size:1.02rem;margin:4px 0 2px;display:flex;gap:6px;align-items:flex-start;line-height:1.45}
+.note{font-size:.86rem;opacity:.8}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;align-items:center}
+.tag{font-size:.76rem;border:2px solid var(--ink);border-radius:999px;padding:0 8px;white-space:nowrap}
+.tag.car{background:var(--yellow)}.tag.plane{background:var(--coral)}.tag.boat{background:var(--water)}.tag.walk{background:var(--green)}
+.tag.dive{background:var(--water);border-style:dashed}
+.map{font-size:.8rem;text-decoration:none;border-bottom:2px solid var(--ink);padding:2px 0}
+.split-wrap{display:grid;gap:8px}
+@media(min-width:640px){.split-wrap{grid-template-columns:1fr 1fr}.day{padding:16px}.tl{padding-left:32px}.tl::before{left:12px}.tl-item .dot{left:-31px;width:22px;height:22px}.day-head .ill{width:76px;height:76px}}
+.team-col{border:2.5px solid var(--ink);border-radius:var(--r-sm);overflow:hidden}
+.team-h{padding:4px 11px;border-bottom:2.5px solid var(--ink)}
+.team-col.dive .team-h{background:var(--water)}.team-col.bb .team-h{background:var(--coral)}
+.mini{list-style:none;padding:6px 11px}
+.mini li{padding:6px 0;border-bottom:2px dotted rgba(62,58,57,.35)}
+.mini li:last-child{border-bottom:0}
+.mini .nm{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}
+
+/* STAY */
+.stay-card{overflow:hidden}
+.stay-card .top{display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:var(--line)}
+.stay-card:nth-child(1) .top{background:var(--green)}.stay-card:nth-child(2) .top{background:var(--water)}
+.stay-card .top svg{width:52px;height:52px;flex-shrink:0}
+.stay-card h3{font-weight:400;font-size:1.12rem;line-height:1.3;word-break:break-word}
+.stay-rows{padding:10px 14px 14px;display:grid;gap:10px}
+.stay-rows .val{font-size:.95rem;word-break:break-word}
+.ci{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ci div{border:2.5px solid var(--ink);border-radius:12px;padding:6px 10px}
+.ci div:first-child{background:#EEF7E8}.ci div:last-child{background:#FDECE8}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.lbtn{display:inline-flex;align-items:center;gap:6px;border:2.5px solid var(--ink);border-radius:999px;padding:6px 14px;text-decoration:none;background:var(--yellow);font-size:.92rem;min-height:40px}
+.lbtn.alt{background:var(--water)}
+.lbtn.map2{background:var(--paper)}
+
+/* LISTS */
+.list-card{padding:14px 12px}
+.prog{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar{flex:1;height:16px;border:var(--line);border-radius:999px;overflow:hidden;background:var(--paper)}
+.bar span{display:block;height:100%;background:var(--green);border-right:3px solid var(--ink);transition:width .4s cubic-bezier(.3,1.5,.5,1)}
+.grp{margin-top:10px}
+.grp h4{font-weight:400;display:inline-block;border:2.5px solid var(--ink);border-radius:999px;padding:0 12px;margin-bottom:4px;background:var(--yellow)}
+.checks{list-style:none}
+.checks li{display:flex;align-items:center;gap:8px;border-bottom:2px dotted rgba(62,58,57,.3)}
+.checks label{display:flex;align-items:center;gap:10px;flex:1;cursor:pointer;padding:9px 0;min-height:44px}
+.checks input{appearance:none;-webkit-appearance:none;width:26px;height:26px;border:var(--line);border-radius:9px;background:var(--paper);display:grid;place-items:center;flex-shrink:0;cursor:pointer;transition:transform .2s cubic-bezier(.3,1.8,.5,1)}
+.checks input:checked{background:var(--green);transform:scale(1.08)}
+.checks input:checked::after{content:"✓";font-size:1rem;line-height:1}
+.checks input:checked+span{text-decoration:line-through;text-decoration-thickness:2px;opacity:.55}
+.del{border:0;background:none;font-size:1.05rem;opacity:.6;width:40px;height:40px}
+.add{display:flex;gap:8px;margin-top:12px}
+.add input{flex:1;min-width:0;border:var(--line);border-radius:999px;padding:8px 14px;background:var(--paper);font-size:16px}
+.add button{border:var(--line);border-radius:999px;background:var(--coral);padding:0 14px;white-space:nowrap}
+.cols{display:grid;gap:0;max-width:1000px;margin:0 auto}
+@media(min-width:860px){.cols.two{grid-template-columns:1fr 1fr;gap:16px}}
+
+footer{text-align:center;padding:6px 16px calc(36px + env(safe-area-inset-bottom));font-size:.88rem}
+
+html.reduce *,html.reduce *::before,html.reduce *::after{animation:none!important;transition:none!important}
+html.reduce{scroll-behavior:auto}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="main">
+  <div class="nav-in">
+    <a class="brand" href="#home" aria-label="Home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+        <circle cx="20" cy="20" r="17" fill="#F2A497"/>
+        <path d="M20 8 L23 17 L32 20 L23 23 L20 32 L17 23 L8 20 L17 17Z" fill="#F6D27A"/>
+        <circle cx="20" cy="20" r="3" fill="#FFFCF6"/></g></svg>
+      <span data-i18n="brand">沖繩 Trip</span>
+    </a>
+    <div class="links" id="links">
+      <a href="#home" data-i18n="nHome">首頁</a>
+      <a href="#flights" data-i18n="nFlights">航班</a>
+      <a href="#cars" data-i18n="nCar">租車</a>
+      <a href="#itinerary" data-i18n="nItin">行程</a>
+      <a href="#stay" data-i18n="nStay">住宿</a>
+      <a href="#todo" data-i18n="nTodo">待辦</a>
+      <a href="#pretrip" data-i18n="nPre">出發前</a>
+      <a href="#packing" data-i18n="nPack">行李</a>
+    </div>
+    <div class="ctrl">
+      <button class="pill-btn" id="motionBtn" aria-pressed="false">✨</button>
+      <button class="pill-btn lang" id="langBtn">EN</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+<section id="home">
+  <div class="card hero">
+    <svg class="hero-svg" viewBox="0 0 400 260" role="img" aria-label="Okinawa illustration">
+      <rect width="400" height="260" fill="#FFFCF6"/>
+      <g stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+        <g transform="translate(336 56)">
+          <g class="anim spin"><path d="M0 -40 V-33 M0 33 V40 M-40 0 H-33 M33 0 H40 M-28 -28 L-23 -23 M23 23 L28 28 M-28 28 L-23 23 M23 -23 L28 -28" fill="none"/></g>
+          <circle r="24" fill="#F6D27A"/>
+          <circle cx="-8" cy="-2" r="2" fill="#3E3A39" stroke="none"/><circle cx="8" cy="-2" r="2" fill="#3E3A39" stroke="none"/>
+          <path d="M-6 7 Q0 12 6 7" fill="none"/>
+        </g>
+        <g class="anim drift"><path d="M30 74 Q28 58 46 58 Q52 44 70 48 Q86 44 90 60 Q104 60 104 74 Z" fill="#FFFCF6"/></g>
+        <g class="anim drift2"><path d="M222 44 Q222 32 236 32 Q242 22 256 26 Q270 24 272 36 Q282 38 282 46 Z" fill="#FFFCF6"/></g>
+        <g transform="translate(140 74)">
+          <g class="anim float">
+            <path d="M8 -2 L2 -16 L12 -16 L22 -2Z" fill="#F2A497"/>
+            <path d="M0 6 C0 0 6 -4 14 -4 H60 C70 -4 74 4 68 8 C64 12 58 14 52 14 H8 C3 14 0 11 0 6Z" fill="#FFFCF6"/>
+            <path d="M28 6 L40 26 L50 26 L44 6Z" fill="#A8D3E6"/>
+            <circle cx="40" cy="3" r="2.2" fill="#A8D3E6" stroke-width="2"/><circle cx="50" cy="3" r="2.2" fill="#A8D3E6" stroke-width="2"/><circle cx="30" cy="3" r="2.2" fill="#A8D3E6" stroke-width="2"/>
+          </g>
+        </g>
+        <rect x="200" y="160" width="172" height="8" rx="3" fill="#FFFCF6"/>
+        <path d="M230 168 V184 M262 168 V184 M294 168 V184 M326 168 V184 M358 168 V184" fill="none"/>
+        <g clip-path="url(#bridgeClip)">
+          <g class="anim drive">
+            <g transform="translate(340 146)">
+              <rect x="0" y="0" width="26" height="12" rx="5" fill="#F6D27A"/>
+              <path d="M5 0 Q8 -7 14 -7 Q20 -7 21 0" fill="#A8D3E6"/>
+              <circle cx="7" cy="13" r="3" fill="#3E3A39"/><circle cx="20" cy="13" r="3" fill="#3E3A39"/>
+            </g>
+          </g>
+        </g>
+        <path d="M0 182 q25 -9 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 V260 H0Z" fill="#A8D3E6"/>
+        <path d="M250 204 q8 -5 16 0 M318 226 q8 -5 16 0 M196 236 q8 -5 16 0 M30 214 q8 -5 16 0" fill="none"/>
+        <path d="M366 184 C368 164 386 158 400 160 V184 Z" fill="#B9DAA5"/>
+        <path d="M14 184 C34 142 86 126 128 138 C160 146 184 164 200 184 Z" fill="#B9DAA5"/>
+        <path d="M6 186 C60 174 150 174 210 186 Z" fill="#F6D27A"/>
+        <rect x="104" y="142" width="38" height="24" rx="3" fill="#FFFCF6"/>
+        <path d="M96 145 L123 124 L150 145 Z" fill="#F2A497"/>
+        <rect x="117" y="152" width="11" height="14" rx="2" fill="#F6D27A"/>
+        <circle cx="123" cy="120" r="6" fill="#F6D27A"/><path d="M119 116 L117 112 M127 116 L129 112" fill="none" stroke-width="2.5"/>
+        <path d="M58 172 C56 150 60 130 68 112 L74 114 C68 132 66 152 68 172 Z" fill="#F6D27A"/>
+        <g transform="translate(71 112)">
+          <g class="anim sway">
+            <path d="M0 0 C-10 -12 -28 -12 -38 -2 C-24 -6 -12 -4 0 0Z" fill="#B9DAA5"/>
+            <path d="M0 0 C10 -12 28 -12 38 -2 C24 -6 12 -4 0 0Z" fill="#B9DAA5"/>
+            <path d="M0 0 C-4 -14 -16 -24 -26 -24 C-14 -18 -6 -10 0 0Z" fill="#B9DAA5"/>
+            <path d="M0 0 C4 -14 16 -24 26 -24 C14 -18 6 -10 0 0Z" fill="#B9DAA5"/>
+            <circle cx="-4" cy="4" r="4" fill="#F2A497"/><circle cx="5" cy="5" r="4" fill="#F2A497"/>
+          </g>
+        </g>
+        <g transform="translate(258 190)">
+          <g class="anim bob">
+            <path d="M14 -6 V-28 L32 -10 Z" fill="#F6D27A"/>
+            <path d="M0 -6 H48 L40 10 H8 Z" fill="#F2A497"/>
+            <circle cx="24" cy="2" r="2.5" fill="#FFFCF6" stroke-width="2"/>
+          </g>
+        </g>
+        <g transform="translate(40 224)">
+          <g class="anim swim">
+            <path d="M0 8 C6 -6 40 -8 66 0 L84 -10 L80 8 L84 22 L66 14 C40 22 6 20 0 8Z" fill="#FFFCF6"/>
+            <path d="M34 -2 L40 -14 L48 -2" fill="#FFFCF6"/>
+            <path d="M6 12 Q12 15 18 12" fill="none" stroke-width="2.5"/>
+            <circle cx="10" cy="5" r="2" fill="#3E3A39" stroke="none"/>
+            <g fill="#3E3A39" stroke="none"><circle cx="28" cy="4" r="1.8"/><circle cx="38" cy="8" r="1.8"/><circle cx="48" cy="3" r="1.8"/><circle cx="56" cy="9" r="1.8"/><circle cx="32" cy="12" r="1.8"/><circle cx="44" cy="14" r="1.8"/></g>
+          </g>
+        </g>
+        <g class="anim float"><circle cx="150" cy="232" r="4" fill="#FFFCF6" stroke-width="2"/><circle cx="160" cy="220" r="3" fill="#FFFCF6" stroke-width="2"/></g>
+      </g>
+      <defs><clipPath id="bridgeClip"><rect x="200" y="120" width="172" height="48"/></clipPath></defs>
+    </svg>
+    <div class="hero-txt">
+      <h1 data-i18n="title">沖繩春日海島之旅</h1>
+      <p class="sub" data-i18n="dates">2027年4月4日 – 4月11日・8日7夜</p>
+      <div class="cd-wrap">
+        <div class="cd-box a">
+          <div class="cd-h"><b data-i18n="teamA">A隊</b><span data-i18n="arrA">4月4日抵達</span></div>
+          <div class="cd-names">Jon · Regina · Amber · Nathan · Jan · Jo · Tiff</div>
+          <div class="count"><div><b id="aD">0</b><small data-i18n="cDay">日</small></div><div><b id="aH">00</b><small data-i18n="cHr">時</small></div><div><b id="aM">00</b><small data-i18n="cMin">分</small></div><div><b id="aS">00</b><small data-i18n="cSec">秒</small></div></div>
+          <p class="count-lbl" id="aLbl"></p>
+        </div>
+        <div class="cd-box b">
+          <div class="cd-h"><b data-i18n="teamB">B隊</b><span data-i18n="arrB">4月7日抵達</span></div>
+          <div class="cd-names">Fung · Pui · Sum · HoiKei · Gus</div>
+          <div class="count"><div><b id="bD">0</b><small data-i18n="cDay">日</small></div><div><b id="bH">00</b><small data-i18n="cHr">時</small></div><div><b id="bM">00</b><small data-i18n="cMin">分</small></div><div><b id="bS">00</b><small data-i18n="cSec">秒</small></div></div>
+          <p class="count-lbl" id="bLbl"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="flights">
+  <div class="sec-h"><div class="em">✈️</div><h2 data-i18n="nFlights">航班</h2></div>
+  <div class="grid g3" id="flightList"></div>
+</section>
+
+<section id="cars">
+  <div class="sec-h"><div class="em" style="background:var(--yellow)">🚗</div><h2 data-i18n="carH">租車資訊</h2></div>
+  <div class="grid g3" id="carList"></div>
+  <div class="card car-tip" id="carTip"></div>
+</section>
+
+<section id="itinerary">
+  <div class="sec-h"><div class="em" style="background:var(--coral)">🗺️</div><h2 data-i18n="itinH">每日行程</h2></div>
+  <div class="tabs" id="tabs" role="tablist"></div>
+  <div class="legend" id="legend"></div>
+  <article class="card day" id="dayPanel" role="tabpanel"></article>
+</section>
+
+<section id="stay">
+  <div class="sec-h"><div class="em" style="background:var(--green)">🏠</div><h2 data-i18n="stayH">住宿資訊</h2></div>
+  <div class="grid g2" id="stayList"></div>
+</section>
+
+<section id="todo">
+  <div class="sec-h"><div class="em" style="background:var(--yellow)">📝</div><h2 data-i18n="todoH">待辦清單</h2></div>
+  <div class="card list-card" id="todoList"></div>
+</section>
+
+<div class="cols two">
+  <section id="pretrip" style="width:100%">
+    <div class="sec-h"><div class="em" style="background:var(--coral)">✅</div><h2 data-i18n="preH">出發前清單</h2></div>
+    <div class="card list-card" id="preList"></div>
+  </section>
+  <section id="packing" style="width:100%">
+    <div class="sec-h"><div class="em">🧳</div><h2 data-i18n="packH">行李清單</h2></div>
+    <div class="card list-card" id="packList"></div>
+  </section>
+</div>
+</main>
+
+<footer data-i18n="foot">🌺 A隊 + B隊・沖繩見！ 🌊</footer>
+
+<script>
+const UI={
+ zh:{brand:'沖繩 Trip',nHome:'首頁',nFlights:'航班',nCar:'租車',nItin:'行程',nStay:'住宿',nTodo:'待辦',nPre:'出發前',nPack:'行李',
+  title:'沖繩春日海島之旅',dates:'2027年4月4日 – 4月11日・8日7夜',cDay:'日',cHr:'時',cMin:'分',cSec:'秒',
+  teamA:'A隊',teamB:'B隊',arrA:'4月4日抵達',arrB:'4月7日抵達',carH:'租車資訊',itinH:'每日行程',stayH:'住宿資訊',todoH:'待辦清單',
+  preH:'出發前清單',packH:'行李清單',foot:'🌺 A隊 + B隊・沖繩見！ 🌊',
+  cdA:'距離 A隊 出發仲有 ✈️',cdB:'距離 B隊 出發仲有 ✈️',cdDuring:'已抵達沖繩，玩得開心！🌺',cdAfter:'旅程完滿結束，下次再見！',
+  motionOn:'減少動態效果：開',motionOff:'減少動態效果：關',add:'新增',addPh:'新增項目…'},
+ en:{brand:'Okinawa Trip',nHome:'Home',nFlights:'Flights',nCar:'Car',nItin:'Itinerary',nStay:'Stay',nTodo:'To-do',nPre:'Pre-trip',nPack:'Packing',
+  title:'Okinawa Spring Island Trip',dates:'4 – 11 April 2027 · 8 days, 7 nights',cDay:'Days',cHr:'Hrs',cMin:'Min',cSec:'Sec',
+  teamA:'Team A',teamB:'Team B',arrA:'Arrives 4 Apr',arrB:'Arrives 7 Apr',carH:'Car Rental',itinH:'Daily Itinerary',stayH:'Accommodation',todoH:'To-do List',
+  preH:'Pre-departure Checklist',packH:'Packing List',foot:'🌺 Team A + Team B · See you in Okinawa! 🌊',
+  cdA:'Countdown to Team A departure ✈️',cdB:'Countdown to Team B departure ✈️',cdDuring:'In Okinawa — have fun! 🌺',cdAfter:'Trip completed — until next time!',
+  motionOn:'Reduce motion: ON',motionOff:'Reduce motion: OFF',add:'Add',addPh:'Add an item…'}
+};
+let lang=localStorage.getItem('oki-lang')||'zh';
+const t=v=>v==null?'':Array.isArray(v)?(lang==='zh'?v[0]:v[1]):v;
+const u=k=>UI[lang][k];
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+const TAGS={car:['🚗 自駕','🚗 Drive'],plane:['✈️ 飛機','✈️ Flight'],boat:['⛴️ 乘船','⛴️ Boat'],walk:['🚶 步行','🚶 Walk'],dive:['🤿 潛水','🤿 Dive']};
+const SL={arrive:['抵達','Arrive'],morning:['上午','Morning'],noon:['中午','Midday'],afternoon:['下午','Afternoon'],sunset:['黃昏','Sunset'],evening:['晚上','Evening'],stay:['住宿','Stay'],allday:['全日','All day']};
+const TEAMS={dive:['🤿 潛水隊','🤿 Dive Team'],bb:['👶 BB隊','👶 BB Team']};
+const STAY1='NANJO AIRBNB', STAY2='YOTAMIKA Okinawa Villa W';
+const I=(s,i,n,o={})=>({s,i,n,...o});
+const M=(i,n,o={})=>({i,n,...o});
+const Sp=(s,dive,bb)=>({split:true,s,dive,bb});
+
+/* ===== 租車 ===== */
+const CARS=[
+ {n:['車 1','Car 1'],from:'2027-04-04',to:'2027-04-11',co:'ABC'},
+ {n:['車 2','Car 2'],from:'2027-04-04',to:'2027-04-11',co:'ABC'},
+ {n:['車 3','Car 3'],from:'2027-04-07',to:'2027-04-11',co:'ABC'}
+];
+
+const DAYS=[
+ {date:'2027-04-04',ill:'plane',title:['A隊抵達沖繩＋瀨長島','Team A arrives + Senagajima'],who:'a',stay:STAY1,items:[
+  I('arrive','✈️',['抵達那霸機場','Arrive at Naha Airport'],{tag:['plane'],note:['A隊 7人','Team A · 7 people']}),
+  I('arrive','🔑',['ABC 租車取車','Pick up rental cars (ABC)'],{tag:['car'],note:['記得帶國際車牌','Remember to bring your International Driving Permit']}),
+  I('sunset','🌅',['瀨長島','Senagajima Island'],{tag:['car'],must:1,note:['黃昏海景＋近距離看飛機起降','Sunset sea views & planes taking off overhead'],map:'Senagajima Umikaji Terrace'}),
+  I('evening','🍽️',['Dinner：瀨長島餐廳','Dinner: restaurant on Senagajima'],{tag:['walk']}),
+  I('stay','🏠',['Check-in：'+STAY1,'Check-in: '+STAY1],{tag:['car']})
+ ]},
+ {date:'2027-04-05',ill:'rock',title:['南部一日遊：齋場御嶽＋知念岬＋玉泉洞','South Okinawa day trip: Sefa-utaki, Chinen Cape, Gyokusendo'],who:'a',stay:STAY1,items:[
+  I('morning','⛩️',['齋場御嶽','Sefa-utaki'],{tag:['car'],must:1,note:['世界遺產・琉球聖地','UNESCO World Heritage sacred site'],map:'Sefa-utaki'}),
+  I('morning','🌊',['知念岬公園','Chinen Cape Park'],{tag:['car'],map:'Chinen Cape Park'}),
+  I('noon','🍤',['奧武島天婦羅','Ojima Island tempura'],{tag:['car'],map:'Ojima Island Nanjo Okinawa'}),
+  I('afternoon','🦇',['沖繩世界文化王國・玉泉洞','Okinawa World & Gyokusendo Cave'],{tag:['car'],must:1,map:'Okinawa World Gyokusendo'}),
+  I('evening','🐟',['Early Dinner：糸滿漁市場','Early dinner: Itoman Fish Market'],{tag:['car'],map:'Itoman Umanchu Market'}),
+  I('stay','🏠',[STAY1,STAY1],{tag:['car']})
+ ]},
+ {date:'2027-04-06',ill:'sub',title:['萬座毛潛水＋海中展望船','Manzamo diving + undersea boat'],who:'a',stay:STAY1,items:[
+  Sp('morning',[M('🤿',['萬座毛附近潛水','Diving near Cape Manzamo'],{tag:['car','dive'],must:1})],
+   [M('🚤',['ANA 萬座海濱洲際酒店「Submarine Jr. II」海中展望船','"Submarine Jr. II" undersea boat, ANA InterContinental Manza Beach'],{tag:['car','boat'],map:'ANA InterContinental Manza Beach Resort'}),
+    M('🏛️',['萬座毛新遊客中心','Cape Manzamo Visitor Centre'],{tag:['walk'],must:1,map:'Cape Manzamo'})]),
+  I('noon','🍇',['Lunch：元祖海葡萄 本店','Lunch: Ganso Umibudo (sea grapes) main store'],{tag:['car'],map:'元祖海ぶどう 本店'}),
+  I('afternoon','🏖️',['恩納海濱公園 Nabee 海灘','Onna Seaside Park Nabee Beach'],{tag:['car'],map:'Onna Seaside Park Nabee Beach'}),
+  I('evening','🍽️',['Dinner：和泉食堂','Dinner: Izumi Shokudo'],{tag:['car'],map:'和泉食堂 沖縄'}),
+  I('stay','🏠',[STAY1,STAY1],{tag:['car']})
+ ]},
+ {date:'2027-04-07',ill:'coffee',title:['B隊抵達沖繩＋Coffee＋神社＋Outlet','Team B arrives + coffee + temple + outlet'],who:'all',stay:STAY2,items:[
+  I('morning','🧳',['NANJO AIRBNB Check-out（10:00AM）','NANJO AIRBNB check-out (10:00 AM)'],{}),
+  I('morning','🛕',['達摩寺','Daruma-ji Temple'],{tag:['car']}),
+  I('noon','☕',['Good Day Coffee Brunch','Good Day Coffee brunch'],{tag:['car'],opt:1,note:['路程比較遠，視乎時間','A longer drive — go if time allows'],map:'Good Day Coffee Okinawa'}),
+  I('afternoon','🛍️',['ASHIBINAA Outlet','Okinawa Outlet Mall ASHIBINAA'],{tag:['car'],map:'Okinawa Outlet Mall Ashibinaa'}),
+  I('afternoon','👋',['接 B隊 機（一齊／分批）＋取車 3','Pick up Team B at the airport (together or in groups) + collect Car 3'],{tag:['car','plane'],must:1,note:['B隊 5人：Fung、Pui、Sum、HoiKei、Gus','Team B · 5: Fung, Pui, Sum, HoiKei, Gus']}),
+  I('evening','🦞',['Dinner：浜の家海鮮料理','Dinner: Hamanoya seafood'],{tag:['car'],map:'浜の家 沖縄 読谷'}),
+  I('stay','🏠',['Check-in：'+STAY2+'（3:00PM 起）','Check-in: '+STAY2+' (from 3:00 PM)'],{tag:['car']})
+ ]},
+ {date:'2027-04-08',ill:'fish',title:['青之洞潛水＋部瀬名海中公園＋琉球村＋AEON','Blue Cave dive + Busena Marine Park + Ryukyu Mura + AEON'],who:'all',stay:STAY2,items:[
+  Sp('morning',[
+    M('🏠',['Villa W 出發','Depart Villa W'],{tag:['car']}),
+    M('📍',['到青之洞集合地點','Meet at Blue Cave meeting point'],{tag:['car'],map:'Blue Cave Maeda Okinawa'}),
+    M('🤿',['青之洞潛水','Blue Cave diving'],{tag:['dive'],must:1}),
+    M('🚿',['沖涼、換衫','Shower & change'],{})],
+   [M('🏠',['Villa W 出發','Depart Villa W'],{tag:['car']}),
+    M('🐠',['部瀬名海中公園','Busena Marine Park'],{tag:['car'],must:1,map:'Busena Marine Park'}),
+    M('🔭',['海中展望塔（約50分鐘）','Underwater Observatory (~50 min)'],{tag:['walk']}),
+    M('🐋',['鯨魚玻璃底船（約45分鐘）','Whale glass-bottom boat (~45 min)'],{tag:['boat']}),
+    M('🏖️',['沙灘散步／前往午餐地點','Beach stroll / head to lunch'],{tag:['walk']})]),
+  I('noon','🐷',['全員 Lunch：沖繩炸豬排食堂 しまぶた屋 前兼久店','All-team lunch: Shimabutaya (Maekaneku) tonkatsu'],{tag:['car'],map:'しまぶた屋 前兼久店'}),
+  I('afternoon','🏯',['琉球村','Ryukyu Mura'],{tag:['car'],opt:1,map:'Ryukyu Mura'}),
+  I('afternoon','🛍️',['AEON Mall Okinawa Rycom','AEON Mall Okinawa Rycom'],{tag:['car'],map:'AEON Mall Okinawa Rycom'}),
+  I('evening','🍳',['Dinner：AEON 附近／商場內，或 AEON 買餸返 Villa 煮','Dinner: near/inside AEON, or buy groceries to cook at the villa'],{}),
+  I('stay','🏠',[STAY2,STAY2],{tag:['car']})
+ ]},
+ {date:'2027-04-09',ill:'boat',title:['慶良間潛水＋PARCO CITY＋國際通','Kerama diving + PARCO CITY + Kokusai Street'],who:'all',stay:STAY2,options:{
+  A:{label:['方案A：全日','Option A: Full day'],items:[
+   Sp('allday',[
+     M('🏠',['Villa W 出發','Depart Villa W'],{tag:['car']}),
+     M('⚓',['到碼頭集合','Meet at the pier'],{tag:['car']}),
+     M('🤿',['慶良間潛水','Kerama Islands diving'],{tag:['boat','dive'],must:1}),
+     M('🍱',['船上 Lunch','Lunch on board'],{}),
+     M('🔁',['繼續潛水／返航','More dives / return'],{tag:['boat']})],
+    [M('😴',['繼續休息','Rest & sleep in'],{}),
+     M('🥐',['Hoppepan 麵包＋PARCO CITY','Hoppepan bakery + PARCO CITY'],{tag:['car'],map:'San-A Urasoe West Coast PARCO CITY'}),
+     M('🍤',['Lunch：HAKATA TEMPURA TAKAO／泊港漁市場','Lunch: HAKATA TEMPURA TAKAO / Tomari Port Fish Market'],{tag:['car'],map:'Tomari Iyumachi Fish Market'})]),
+   I('afternoon','🛍️',['美國村、國際通','American Village & Kokusai Street'],{tag:['car','walk'],must:1,map:'Kokusai Street Naha'}),
+   I('evening','🍽️',['全員 Dinner：OCEAN BOO! NAHA','All-team dinner: OCEAN BOO! NAHA'],{tag:['walk'],map:'OCEAN BOO NAHA'}),
+   I('stay','🏠',[STAY2,STAY2],{tag:['car']})]},
+  B:{label:['方案B：半日','Option B: Half day'],items:[
+   Sp('morning',[M('🤿',['半日慶良間潛水','Half-day Kerama diving'],{tag:['boat','dive'],must:1})],
+    [M('🥐',['Hoppepan＋PARCO CITY','Hoppepan + PARCO CITY'],{tag:['car'],map:'San-A Urasoe West Coast PARCO CITY'})]),
+   I('noon','🍤',['全員 Lunch：HAKATA TEMPURA TAKAO／泊港漁市場','All-team lunch: HAKATA TEMPURA TAKAO / Tomari Port Fish Market'],{tag:['car'],map:'Tomari Iyumachi Fish Market'}),
+   I('afternoon','🛍️',['美國村','American Village'],{tag:['car'],map:'Mihama American Village'}),
+   I('evening','🛍️',['國際通','Kokusai Street'],{tag:['car','walk'],must:1,map:'Kokusai Street Naha'}),
+   I('evening','🍽️',['全員 Dinner：OCEAN BOO! NAHA','All-team dinner: OCEAN BOO! NAHA'],{tag:['walk'],map:'OCEAN BOO NAHA'}),
+   I('stay','🏠',[STAY2,STAY2],{tag:['car']})]}
+ }},
+ {date:'2027-04-10',ill:'shark',title:['古宇利島＋美麗海水族館＋名護 Donki','Kouri Island + Churaumi Aquarium + Nago Donki'],who:'all',stay:STAY2,items:[
+  I('morning','🏠',['Villa W 出發','Depart Villa W'],{tag:['car']}),
+  I('morning','🌉',['古宇利島','Kouri Island'],{tag:['car'],must:1,note:['駕車橫跨古宇利大橋','Drive across the Kouri Bridge'],map:'Kouri Island'}),
+  I('noon','🦐',['Lunch：Kurumaebi Kitchen TAMAYA','Lunch: Kurumaebi Kitchen TAMAYA'],{tag:['car'],map:'Kurumaebi Kitchen TAMAYA Kouri'}),
+  I('afternoon','🐬',['沖繩美麗海水族館','Okinawa Churaumi Aquarium'],{tag:['car'],must:1,map:'Okinawa Churaumi Aquarium'}),
+  I('evening','🍖',['Dinner：炭火焼き居酒屋 將（名護）','Dinner: Charcoal-grill izakaya Sho (Nago)'],{tag:['car']}),
+  I('evening','🛍️',['MEGA 唐吉訶德 名護店','MEGA Don Quijote Nago'],{tag:['car'],map:'MEGA Don Quijote Nago'}),
+  I('stay','🏠',[STAY2,STAY2],{tag:['car']})
+ ]},
+ {date:'2027-04-11',ill:'home',title:['iias 沖繩豐崎＋DMM 水族館＋機場','iias Toyosaki + DMM Aquarium + Airport'],who:'all',stay:null,items:[
+  I('morning','🧳',['Villa W Check-out（11:00AM）','Villa W check-out (11:00 AM)'],{}),
+  I('morning','🚗',['前往豐崎','Drive to Toyosaki'],{tag:['car']}),
+  I('noon','🛍️',['iias Okinawa Toyosaki＋全員 Lunch（商場內）','iias Okinawa Toyosaki + all-team lunch in the mall'],{tag:['walk'],map:'iias Okinawa Toyosaki'}),
+  I('afternoon','🐠',['DMM Kariyushi 水族館','DMM Kariyushi Aquarium'],{tag:['walk'],opt:1,map:'DMM Kariyushi Aquarium'}),
+  I('afternoon','🔑',['還車（ABC・3架車）','Return all 3 rental cars (ABC)'],{tag:['car'],must:1}),
+  I('evening','✈️',['機場 Check-in → 回香港','Airport check-in → fly home to Hong Kong'],{tag:['plane']})
+ ]}
+];
+
+const FLIGHTS=[
+ {cls:'a',label:['A隊・去程','Team A · Outbound'],from:['HKG','香港','Hong Kong'],to:['OKA','沖繩','Okinawa'],date:['2027年4月4日（日）','Sun, 4 Apr 2027'],pax:'Jon, Regina, Amber, Nathan, Jan, Jo, Tiff'},
+ {cls:'b',label:['B隊・去程','Team B · Outbound'],from:['HKG','香港','Hong Kong'],to:['OKA','沖繩','Okinawa'],date:['2027年4月7日（三）','Wed, 7 Apr 2027'],pax:'Fung, Pui, Sum, HoiKei, Gus'},
+ {cls:'r',label:['全員・回程','Everyone · Return'],from:['OKA','沖繩','Okinawa'],to:['HKG','香港','Hong Kong'],date:['2027年4月11日（日）','Sun, 11 Apr 2027'],pax:['A隊＋B隊 12人','Team A + B · 12 people']}
+];
+
+/* ===== 住宿 ===== */
+const STAYS=[
+ {name:STAY1,days:'Day 1 – 3',addr:'INAMINE-1249 OZATO',mapq:'1249 Ozato Inamine Nanjo Okinawa',
+  cin:['4月4日 03:00PM','4 Apr, 3:00 PM'],cout:['4月7日 10:00AM','7 Apr, 10:00 AM'],
+  notes:[['🅿️ 停車位 2個','🅿️ 2 parking spaces'],['🛏️ 4房','🛏️ 4 bedrooms'],['🛁 2浴室','🛁 2 bathrooms'],['🚽 2廁所','🚽 2 toilets']],
+  links:[{u:'https://www.airbnb.com/l/0x4UUXAQ',n:['🏠 房源詳情','🏠 Listing details']}]},
+ {name:STAY2,days:'Day 4 – 8',addr:'368, Onna, Kunigami District, Okinawa, 904-0411',mapq:'368 Onna, Kunigami District, Okinawa 904-0411',
+  cin:['4月7日 03:00PM','7 Apr, 3:00 PM'],cout:['4月11日 11:00AM','11 Apr, 11:00 AM'],
+  notes:[['🅿️ 停車位 6個','🅿️ 6 parking spaces'],['🛏️ 5房','🛏️ 5 bedrooms'],['🛁 4浴室','🛁 4 bathrooms'],['🚽 4廁所','🚽 4 toilets'],['🎾 網球場','🎾 Tennis court'],['🏊 泳池','🏊 Pool']],
+  links:[{u:'https://drive.google.com/file/d/1_RGUxg9HihlnKG8bhBytnChSLbtwuGNE/view?pli=1',n:['📖 入住指南','📖 Check-in guide'],c:'alt'},
+         {u:'https://www.airbnb.com/l/PoO3yySQ',n:['🏠 房源詳情','🏠 Listing details']}]}
+];
+
+const TODO=[{items:[
+ ['t2','預約 ABC 租車 3架（車1、車2：4/4–4/11；車3：4/7–4/11）','Book 3 ABC rental cars (Car 1 & 2: 4–11 Apr; Car 3: 7–11 Apr)'],
+ ['t3','司機申請國際車牌（IDP）','Drivers: apply for International Driving Permit'],
+ ['t4','預約 4/6 萬座毛潛水','Book 6 Apr Manzamo dive'],
+ ['t5','預約 4/6 Submarine Jr. II 海中展望船','Book 6 Apr Submarine Jr. II'],
+ ['t6','預約 4/8 青之洞潛水','Book 8 Apr Blue Cave dive'],
+ ['t7','決定 4/9 方案A／B，預約慶良間潛水','Decide 9 Apr Option A/B & book Kerama dive'],
+ ['t8','預購美麗海水族館門票','Pre-buy Churaumi Aquarium tickets'],
+ ['t9','訂位：浜の家、OCEAN BOO! NAHA、炭火焼き居酒屋 將','Reserve: Hamanoya, OCEAN BOO! NAHA, Izakaya Sho'],
+ ['t11','購買旅遊保險（包潛水活動）','Buy travel insurance (covering diving)'],
+ ['t12','分配接 B隊 機嘅車輛及司機','Assign cars/drivers for Team B pick-up']]}];
+
+const PRE=[{items:[
+ ['p1','護照有效期充足','Passport validity checked'],
+ ['p2','填寫 Visit Japan Web','Complete Visit Japan Web'],
+ ['p3','國際車牌＋香港駕照正本','IDP + original HK driving licence'],
+ ['p4','兌換日圓現金／信用卡開通海外簽賬','Yen cash / enable overseas card spending'],
+ ['p5','eSIM／漫遊／WiFi 蛋','eSIM / roaming / pocket WiFi'],
+ ['p7','潛水證／健康聲明表','Dive cert / medical declaration'],
+ ['p8','列印或截圖所有預約確認','Save/print all booking confirmations'],
+ ['p9','旅遊保險保單資料','Travel insurance policy details'],
+ ['p10','出發前一日網上 Check-in','Online check-in the day before']]}];
+
+const PACK=[
+ {title:['證件','Documents'],items:[['k1','護照','Passport'],['k2','駕照＋國際車牌','Driving licence + IDP'],['k3','信用卡／日圓','Credit cards / Yen']]},
+ {title:['衣物','Clothing'],items:[['k4','輕便衣物＋薄外套','Light clothes + thin jacket'],['k5','泳衣／Rash guard','Swimwear / rash guard'],['k6','拖鞋／涼鞋','Sandals / flip-flops'],['k7','太陽帽／太陽眼鏡','Sun hat / sunglasses']]},
+ {title:['海灘＋潛水','Beach & Dive'],items:[['k8','防曬（珊瑚友善）','Reef-safe sunscreen'],['k9','毛巾／速乾巾','Quick-dry towel'],['k10','防水袋／防水手機套','Dry bag / waterproof phone case'],['k11','潛水證／潛水面鏡（如自備）','Dive card / own mask (if any)']]},
+ {title:['電子產品','Electronics'],items:[['k12','充電器＋尿袋','Chargers + power bank'],['k13','日本轉插（A型）','Japan plug adapter (Type A)'],['k14','車用手機架／充電線','Car phone mount / cable']]},
+ {title:['BB 用品','Baby items'],items:[['k15','尿片／濕紙巾','Diapers / wipes'],['k16','BB 防曬＋水泡','Baby sunscreen + swim float'],['k17','BB 車／揹帶','Stroller / carrier'],['k21','玩具／娛樂用品','Toys / entertainment'],['k22','餐具／日常用品','Feeding utensils / daily essentials']]},
+ {title:['藥物','Medicine'],items:[['k18','暈浪丸','Seasickness pills'],['k19','常用藥＋膠布','Personal meds + plasters'],['k20','蚊怕水','Insect repellent']]}
+];
+
+const S='stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+const ILL={
+ plane:`<svg viewBox="0 0 80 80"><g ${S}><circle cx="58" cy="22" r="12" fill="#F6D27A"/><path d="M0 64 q10-6 20 0 t20 0 t20 0 t20 0 V80 H0Z" fill="#A8D3E6"/><g class="anim float"><path d="M14 40 C14 35 18 32 24 32 H52 C60 32 62 38 58 41 C55 44 50 45 46 45 H20 C16 45 14 43 14 40Z" fill="#FFFCF6"/><path d="M18 33 L14 24 L21 24 L27 33Z" fill="#F2A497"/><path d="M32 40 L40 54 L46 54 L42 40Z" fill="#A8D3E6"/></g></g></svg>`,
+ rock:`<svg viewBox="0 0 80 80"><g ${S}><path d="M38 34 L44 34 L46 70 L36 70Z" fill="#A8D3E6"/><path d="M8 72 L20 16 L42 30 L36 72Z" fill="#B9DAA5"/><path d="M72 72 L60 14 L40 30 L44 72Z" fill="#F6D27A"/><g class="anim bob"><circle cx="40" cy="8" r="4" fill="#F2A497"/></g></g></svg>`,
+ sub:`<svg viewBox="0 0 80 80"><g ${S}><path d="M0 30 q10-6 20 0 t20 0 t20 0 t20 0 V80 H0Z" fill="#A8D3E6"/><g class="anim bob"><rect x="14" y="42" width="52" height="22" rx="11" fill="#F6D27A"/><rect x="34" y="30" width="16" height="14" rx="4" fill="#F6D27A"/><circle cx="28" cy="53" r="4" fill="#FFFCF6"/><circle cx="40" cy="53" r="4" fill="#FFFCF6"/><circle cx="52" cy="53" r="4" fill="#FFFCF6"/></g></g></svg>`,
+ coffee:`<svg viewBox="0 0 80 80"><g ${S}><g class="anim float"><path d="M30 22 q-5-6 0-12 M42 22 q-5-6 0-12" fill="none"/></g><path d="M16 30 H56 V52 C56 62 48 68 36 68 C24 68 16 62 16 52Z" fill="#F2A497"/><path d="M56 36 C68 36 68 52 56 52" fill="none"/><path d="M10 70 H62" fill="none"/><circle cx="36" cy="46" r="5" fill="#FFFCF6"/></g></svg>`,
+ fish:`<svg viewBox="0 0 80 80"><g ${S}><rect width="80" height="80" fill="#A8D3E6" stroke="none"/><g class="anim swim"><path d="M10 40 C20 26 40 26 50 40 C40 54 20 54 10 40Z" fill="#F2A497"/><path d="M50 40 L62 30 L62 50Z" fill="#F2A497"/><circle cx="20" cy="38" r="2.5" fill="#3E3A39" stroke="none"/></g><g class="anim float"><circle cx="62" cy="18" r="4" fill="#FFFCF6" stroke-width="2"/><circle cx="54" cy="10" r="3" fill="#FFFCF6" stroke-width="2"/></g></g></svg>`,
+ boat:`<svg viewBox="0 0 80 80"><g ${S}><circle cx="62" cy="18" r="9" fill="#F6D27A"/><path d="M0 56 q10-6 20 0 t20 0 t20 0 t20 0 V80 H0Z" fill="#A8D3E6"/><g class="anim bob"><path d="M30 46 V18 L50 42Z" fill="#FFFCF6"/><path d="M12 48 H66 L56 62 H22Z" fill="#F2A497"/></g></g></svg>`,
+ shark:`<svg viewBox="0 0 80 80"><g ${S}><rect width="80" height="80" fill="#A8D3E6" stroke="none"/><g class="anim swim"><path d="M4 42 C8 30 34 28 52 36 L64 28 L62 42 L64 56 L52 48 C34 56 8 54 4 42Z" fill="#FFFCF6"/><circle cx="12" cy="40" r="2" fill="#3E3A39" stroke="none"/><g fill="#3E3A39" stroke="none"><circle cx="26" cy="38" r="1.8"/><circle cx="34" cy="44" r="1.8"/><circle cx="42" cy="38" r="1.8"/></g></g></g></svg>`,
+ home:`<svg viewBox="0 0 80 80"><g ${S}><g class="anim bob"><rect x="18" y="26" width="44" height="40" rx="8" fill="#F6D27A"/><path d="M32 26 V18 H48 V26" fill="none"/><path d="M18 42 H62" fill="none"/><circle cx="28" cy="70" r="4" fill="#3E3A39"/><circle cx="52" cy="70" r="4" fill="#3E3A39"/></g></g></svg>`
+};
+const HOUSE=c=>`<svg viewBox="0 0 60 60"><g ${S}><path d="M8 28 L30 10 L52 28Z" fill="#F2A497"/><rect x="13" y="28" width="34" height="24" rx="3" fill="#FFFCF6"/><rect x="25" y="36" width="10" height="16" rx="2" fill="${c}"/><circle cx="30" cy="8" r="4" fill="#F6D27A"/></g></svg>`;
+const CAR_SVG=c=>`<svg viewBox="0 0 76 52"><g ${S}><path d="M2 48 H74" fill="none" stroke-dasharray="6 6"/><g class="anim roll"><path d="M8 26 C8 20 12 18 18 18 L24 8 C26 5 28 4 32 4 H48 C52 4 54 5 56 8 L62 18 C68 18 70 22 70 26 V36 C70 38 68 40 66 40 H10 C8 40 8 38 8 36Z" fill="${c}"/><path d="M28 9 H38 V18 H23Z M43 9 H50 L56 18 H43Z" fill="#A8D3E6" stroke-width="2.5"/><circle cx="21" cy="40" r="6" fill="#3E3A39"/><circle cx="57" cy="40" r="6" fill="#3E3A39"/><circle cx="21" cy="40" r="2" fill="#FFFCF6" stroke="none"/><circle cx="57" cy="40" r="2" fill="#FFFCF6" stroke="none"/><rect x="64" y="24" width="5" height="4" rx="1" fill="#FFFCF6" stroke-width="2"/></g></g></svg>`;
+const PLANE_I=`<svg viewBox="0 0 30 30"><g ${S} stroke-width="2.5"><rect width="30" height="30" fill="#FFFCF6" stroke="none"/><path d="M4 15 H26 M18 15 L12 6 H9 L13 15 M18 15 L12 24 H9 L13 15 M6 15 L4 10 H2 L3 15" fill="none"/></g></svg>`;
+
+function applyStatic(){
+  document.documentElement.lang=lang==='zh'?'zh-Hant':'en';
+  document.title=lang==='zh'?'沖繩春日海島之旅 2027':'Okinawa Spring Island Trip 2027';
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=u(el.dataset.i18n));
+  const lb=document.getElementById('langBtn');lb.textContent=lang==='zh'?'EN':'中';
+  lb.setAttribute('aria-label',lang==='zh'?'Switch to English':'切換至繁體中文');
+  setMotionBtn();
+}
+
+function renderFlights(){
+  document.getElementById('flightList').innerHTML=FLIGHTS.map(f=>`
+  <div class="card flight ${f.cls}">
+    <div class="band"><span>${t(f.label)}</span><span>${t(f.date)}</span></div>
+    <div class="route">
+      <div><span class="code">${f.from[0]}</span><small>${lang==='zh'?f.from[1]:f.from[2]}</small></div>
+      <div class="mid">${PLANE_I}</div>
+      <div style="text-align:right"><span class="code">${f.to[0]}</span><small>${lang==='zh'?f.to[1]:f.to[2]}</small></div>
+    </div>
+    <div class="perf"></div>
+    <div class="f-body"><label>${t(['乘客','Passengers'])}</label>${t(f.pax)}</div>
+  </div>`).join('');
+}
+
+const WD={zh:['日','一','二','三','四','五','六'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']};
+function dParts(s){const [y,m,d]=s.split('-').map(Number);return {y,m,d,w:new Date(y,m-1,d).getDay()}}
+const fmtD=s=>{const p=dParts(s);return lang==='zh'?`${p.m}月${p.d}日（${WD.zh[p.w]}）`:`${WD.en[p.w]}, ${p.d} Apr`};
+
+function renderCars(){
+  const cols=['#F2A497','#F6D27A','#B9DAA5'];
+  document.getElementById('carList').innerHTML=CARS.map((c,i)=>{
+    const days=Math.round((new Date(c.to)-new Date(c.from))/864e5)+1;
+    return `<div class="card car"><div class="band"><span class="car-name">${t(c.n)}</span><span>${days} ${t(['日','days'])}</span></div>
+    <div class="car-body">${CAR_SVG(cols[i])}<div class="car-info">
+      <div><span class="lbl">${t(['日期','Dates'])}</span>${fmtD(c.from)} – ${fmtD(c.to)}</div>
+      <div><span class="lbl">${t(['租車公司','Rental company'])}</span>${c.co}</div>
+    </div></div></div>`}).join('');
+  document.getElementById('carTip').innerHTML=`<b style="font-weight:400">📌 ${t(['提提你','Reminders'])}</b><ul>
+    <li>${t(['取車時記得帶國際車牌','Remember to bring your International Driving Permit when collecting the cars'])}</li>
+    <li>${t(['車 3 於 4月7日（B隊抵達當日）取車','Car 3 is collected on 7 Apr (Team B arrival day)'])}</li>
+    <li>${t(['4月11日 3架車一齊還車','All 3 cars are returned on 11 Apr'])}</li></ul>`;
+}
+
+let cur=0, opt=localStorage.getItem('oki-opt')||'A';
+function tagsHTML(it){
+  const tg=(it.tag||[]).map(k=>`<span class="tag ${k}">${t(TAGS[k])}</span>`).join('');
+  const mp=it.map?`<a class="map" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(it.map)}" target="_blank" rel="noopener">📍 ${t(['地圖','Map'])}</a>`:'';
+  return tg||mp?`<div class="tags">${tg}${mp}</div>`:'';
+}
+const badges=it=>(it.must?`<span class="badge-must">★ ${t(['必去','Must-go'])}</span>`:'')+(it.opt?`<span class="badge-opt">Optional</span>`:'');
+function itemHTML(it){
+  if(it.split) return `<li class="tl-item"><span class="dot both"></span>
+    <div class="tl-top" style="margin-bottom:6px;padding-top:12px"><span class="slot">${t(SL[it.s])}</span><span>${t(['分隊行動','Teams split up'])}</span></div>
+    <div class="split-wrap">${['dive','bb'].map(k=>`<div class="team-col ${k}"><div class="team-h">${t(TEAMS[k])}</div>
+      <ol class="mini">${it[k].map(m=>`<li><div class="nm"><span>${m.i}</span><span>${t(m.n)}</span>${badges(m)}</div>${m.note?`<p class="note">${t(m.note)}</p>`:''}${tagsHTML(m)}</li>`).join('')}</ol></div>`).join('')}</div></li>`;
+  return `<li class="tl-item"><span class="dot ${(it.tag||['walk'])[0]}"></span>
+    <div class="tl-card ${it.must?'must':''}">
+      <div class="tl-top"><span class="slot">${t(SL[it.s])}</span>${badges(it)}</div>
+      <h4><span>${it.i}</span><span>${t(it.n)}</span></h4>
+      ${it.note?`<p class="note">${t(it.note)}</p>`:''}${tagsHTML(it)}
+    </div></li>`;
+}
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=DAYS.map((d,i)=>{const p=dParts(d.date);
+    return `<button class="tab ${i===cur?'on':''}" role="tab" aria-selected="${i===cur}" data-i="${i}">
+      <b>Day ${i+1}</b><small>${p.m}/${p.d}（${WD[lang][p.w]}）</small>
+      <span class="tm">${d.who==='a'?t(['A隊','Team A']):t(['全員','All'])}</span></button>`}).join('');
+  document.getElementById('legend').innerHTML=Object.keys(TAGS).map(k=>`<span class="tag ${k}">${t(TAGS[k])}</span>`).join('')+`<span class="badge-must" style="font-size:.76rem">★ ${t(['必去','Must-go'])}</span>`;
+}
+function renderDay(anim){
+  const d=DAYS[cur],p=dParts(d.date);
+  const items=d.options?d.options[opt].items:d.items;
+  const who=d.who==='a'?`<span class="chip team-a">${t(['A隊 7人','Team A · 7'])}</span>`:`<span class="chip all">${t(['A隊＋B隊 12人','Team A + B · 12'])}</span>`;
+  const panel=document.getElementById('dayPanel');
+  panel.innerHTML=`<div class="day-head"><div class="ill">${ILL[d.ill]}</div>
+    <div style="min-width:0"><div class="muted" style="font-size:.85rem">Day ${cur+1}・${fmtD(d.date)}</div>
+    <h3>${t(d.title)}</h3><div class="day-meta">${who}${d.stay?`<span class="chip stay">🏠 ${d.stay}</span>`:`<span class="chip stay">✈️ ${t(['回香港','Fly home'])}</span>`}</div></div></div>
+    ${d.options?`<div class="opts" role="group">${['A','B'].map(k=>`<button data-opt="${k}" class="${opt===k?'on':''}" aria-pressed="${opt===k}">${t(d.options[k].label)}</button>`).join('')}</div>`:''}
+    <ol class="tl">${items.map(itemHTML).join('')}</ol>`;
+  if(anim){panel.classList.remove('pop');void panel.offsetWidth;panel.classList.add('pop')}
+}
+document.getElementById('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('.tab');if(!b)return;cur=+b.dataset.i;renderTabs();renderDay(true);
+  const tb=document.querySelector('.tab.on');tb&&tb.scrollIntoView({block:'nearest',inline:'center',behavior:reduce?'auto':'smooth'});
+});
+document.getElementById('dayPanel').addEventListener('click',e=>{
+  const b=e.target.closest('[data-opt]');if(!b)return;opt=b.dataset.opt;localStorage.setItem('oki-opt',opt);renderDay(true);
+});
+
+function renderStays(){
+  document.getElementById('stayList').innerHTML=STAYS.map((s,i)=>`
+  <div class="card stay-card"><div class="top">${HOUSE(i?'#A8D3E6':'#B9DAA5')}<div style="min-width:0"><div style="font-size:.85rem">${s.days}</div><h3>${s.name}</h3></div></div>
+  <div class="stay-rows">
+    <div><span class="lbl">${t(['地址','Address'])}</span><div class="val">${esc(s.addr)}</div></div>
+    <div class="ci"><div><span class="lbl">Check-in</span>${t(s.cin)}</div><div><span class="lbl">Check-out</span>${t(s.cout)}</div></div>
+    <div><span class="lbl">${t(['備註','Notes'])}</span><div>${s.notes.map(n=>`<span class="chip">${t(n)}</span>`).join('')}</div></div>
+    <div class="btns">${s.links.map(l=>`<a class="lbtn ${l.c||''}" href="${l.u}" target="_blank" rel="noopener">${t(l.n)}</a>`).join('')}
+      <a class="lbtn map2" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.mapq)}">📍 Google Maps</a></div>
+  </div></div>`).join('');
+}
+
+const LISTS=[{el:'todoList',key:'oki-todo',groups:TODO},{el:'preList',key:'oki-pre',groups:PRE},{el:'packList',key:'oki-pack',groups:PACK}];
+const getS=k=>{try{return JSON.parse(localStorage.getItem(k))||{done:[],custom:[]}}catch(_){return {done:[],custom:[]}}};
+function renderList(L){
+  const st=getS(L.key),done=new Set(st.done);
+  const all=L.groups.flatMap(g=>g.items.map(x=>x[0])).concat(st.custom.map(c=>c.id));
+  const n=all.filter(id=>done.has(id)).length,pct=all.length?Math.round(n/all.length*100):0;
+  const li=(id,label,custom)=>`<li><label><input type="checkbox" data-id="${id}" ${done.has(id)?'checked':''}><span>${label}</span></label>${custom?`<button class="del" data-del="${id}" aria-label="delete">✕</button>`:''}</li>`;
+  let h=`<div class="prog"><div class="bar"><span style="width:${pct}%"></span></div><b style="font-weight:400">${n}/${all.length}</b></div>`;
+  L.groups.forEach(g=>{h+=`<div class="grp">${g.title?`<h4>${t(g.title)}</h4>`:''}<ul class="checks">${g.items.map(x=>li(x[0],lang==='zh'?x[1]:x[2])).join('')}</ul></div>`});
+  if(st.custom.length)h+=`<div class="grp">${L.groups[0].title?`<h4>${t(['其他','Others'])}</h4>`:''}<ul class="checks">${st.custom.map(c=>li(c.id,esc(c.text),1)).join('')}</ul></div>`;
+  h+=`<form class="add"><input type="text" placeholder="${u('addPh')}" aria-label="${u('addPh')}" maxlength="80" enterkeyhint="done"><button type="submit">＋ ${u('add')}</button></form>`;
+  document.getElementById(L.el).innerHTML=h;
+}
+LISTS.forEach(L=>{
+  const box=document.getElementById(L.el);
+  box.addEventListener('change',e=>{const id=e.target.dataset.id;if(!id)return;const st=getS(L.key);
+    st.done=e.target.checked?[...new Set([...st.done,id])]:st.done.filter(x=>x!==id);localStorage.setItem(L.key,JSON.stringify(st));
+    const all=box.querySelectorAll('input[type=checkbox]'),c=box.querySelectorAll('input:checked').length;
+    box.querySelector('.bar span').style.width=Math.round(c/all.length*100)+'%';box.querySelector('.prog b').textContent=c+'/'+all.length;});
+  box.addEventListener('click',e=>{const id=e.target.dataset&&e.target.dataset.del;if(!id)return;const st=getS(L.key);
+    st.custom=st.custom.filter(c=>c.id!==id);st.done=st.done.filter(x=>x!==id);localStorage.setItem(L.key,JSON.stringify(st));renderList(L);});
+  box.addEventListener('submit',e=>{e.preventDefault();const inp=e.target.querySelector('input'),v=inp.value.trim();if(!v)return;
+    const st=getS(L.key);st.custom.push({id:'c'+Date.now(),text:v});localStorage.setItem(L.key,JSON.stringify(st));renderList(L);});
+});
+
+/* Countdowns (HK time 00:00) */
+const END=new Date('2027-04-12T00:00:00+08:00');
+const CDS=[{p:'a',start:new Date('2027-04-04T00:00:00+08:00'),lbl:'cdA'},{p:'b',start:new Date('2027-04-07T00:00:00+08:00'),lbl:'cdB'}];
+function tick(){
+  const now=new Date();
+  CDS.forEach(c=>{
+    let diff=c.start-now;const lbl=document.getElementById(c.p+'Lbl');
+    if(diff<=0){diff=0;lbl.textContent=now<END?u('cdDuring'):u('cdAfter')}else lbl.textContent=u(c.lbl);
+    const s=Math.floor(diff/1000),g=x=>document.getElementById(c.p+x);
+    g('D').textContent=Math.floor(s/86400);
+    g('H').textContent=String(Math.floor(s%86400/3600)).padStart(2,'0');
+    g('M').textContent=String(Math.floor(s%3600/60)).padStart(2,'0');
+    g('S').textContent=String(s%60).padStart(2,'0');
+  });
+}
+
+const mq=window.matchMedia('(prefers-reduced-motion: reduce)');
+let reduce=localStorage.getItem('oki-reduce');reduce=reduce===null?mq.matches:reduce==='1';
+function setMotionBtn(){
+  document.documentElement.classList.toggle('reduce',reduce);
+  const b=document.getElementById('motionBtn');b.setAttribute('aria-pressed',reduce);
+  b.textContent=reduce?'🐢':'✨';b.title=reduce?u('motionOn'):u('motionOff');b.setAttribute('aria-label',b.title);
+}
+document.getElementById('motionBtn').addEventListener('click',()=>{reduce=!reduce;localStorage.setItem('oki-reduce',reduce?'1':'0');setMotionBtn()});
+mq.addEventListener&&mq.addEventListener('change',e=>{if(localStorage.getItem('oki-reduce')===null){reduce=e.matches;setMotionBtn()}});
+
+/* Active nav link + keep it visible on iPhone */
+const navLinks=[...document.querySelectorAll('#links a')];
+const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){navLinks.forEach(a=>{const on=a.getAttribute('href')==='#'+en.target.id;a.classList.toggle('on',on);
+  if(on){const box=document.getElementById('links');box.scrollTo({left:a.offsetLeft-box.clientWidth/2+a.clientWidth/2,behavior:reduce?'auto':'smooth'})}})}}),{rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('main section').forEach(s=>io.observe(s));
+
+function renderAll(){applyStatic();renderFlights();renderCars();renderTabs();renderDay(false);renderStays();LISTS.forEach(renderList);tick()}
+document.getElementById('langBtn').addEventListener('click',()=>{lang=lang==='zh'?'en':'zh';localStorage.setItem('oki-lang',lang);renderAll()});
+(function(){const n=new Date(),k=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;
+  const i=DAYS.findIndex(d=>d.date===k);if(i>=0)cur=i;})();
+renderAll();setInterval(tick,1000);
+</script>
+</body>
+</html>
